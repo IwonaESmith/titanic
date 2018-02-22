@@ -3,9 +3,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-%matplotlib inline
 
-#load data
 
 
 df_train = pd.read_csv('titanic_train.csv')
@@ -17,9 +15,8 @@ df_all = pd.concat([df_train, df_test] )
 pd.show_versions()
 
 df.columns
-
-print("train", df_train.shape )
-print("test", df_test.shape )
+df_train.shape 
+df_test.shape 
 
 passanger = df_train.shape[0] + df_test.shape[0]
 print(passanger)
@@ -72,15 +69,7 @@ from sklearn.metrics import confusion_matrix
 cm = confusion_matrix(y_test, y_pred)
 
 np.random.seed(2018)
-from sklearn.linear_model import LogisticRegression
-#linear classifier with stochastic gradient descent (gradient of loss function)
-from sklearn.linear_model import SGDClassifier
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.ensemble import ExtraTreesClassifier
-from sklearn.model_selection import cross_validate
 
-import xgboost as xgb
 
 df_train.sample(10)
 
@@ -88,44 +77,3 @@ df_train.sample(10)
 
 
 
-# selecting int values
-df_train.select_dtypes(include =[np.int, np.float]).head()
-def get_feats(df):
-    feats = df.select_dtypes(include=[np.int]).columns.values
-    black_list = ["Passanger", "Survived"]
-    return [feat for feat in feats if feat not in black_list]
-#changing string values to int
-def feature_engeneering(df):
-    df['sex_cat'] = pd.factorize(df_all["Sex"])[0]
-    df['embarked_cat'] = pd.factorize(df_all["Embarked"])[0]
-#call fro models
-def get_models():
-    return[
-            ('lr', LogisitcRegression()),
-            ('dt', DecisionTreeClassifier()),
-            ('rf', RandomForestClassifier()),
-            ('et', ExtraTreeClassifier())
-            ]
-# visalusation
-def plot_result(model_name, result, ylim=(0,1.)):
-    mean_train = np.round(np.mean(result['train_score']), 2)
-    mean_test = np.round(np.mean(result['test_score']), 2)
-
-    plt.plot(result['train_score'], 'r-o', label='train')
-    plt.plot(result['train_score'], 'g-o', label='test')
-    plt.legend(loc='best')
-    plt.ylabel("accuracy")
-    plt.xlabel('# of fold')
-    plt.ylim(*ylim)
-    plt.show()
-    
-# crossvalidation
-df = feature_engeneering(df_train)
-get_feats(df)
-X = df_train[get_feats(df_train)].values
-y = df_train["survived"].values
-
-
-
-df_all['Fare'].hist(bins=100)
-df_all[df_all.Ticket == 'CA.2343']
